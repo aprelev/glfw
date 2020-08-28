@@ -1660,6 +1660,48 @@ void _glfwPlatformFocusWindow(_GLFWwindow* window)
     SetFocus(window->win32.handle);
 }
 
+void _glfwPlatformDragWindow(_GLFWwindow* window)
+{
+    ReleaseCapture();
+    SendMessage(window->win32.handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+}
+
+void _glfwPlatformResizeWindow(_GLFWwindow* window, int border)
+{
+    WPARAM wBorder;
+    switch (border)
+    {
+        case GLFW_WINDOW_LEFT:
+            wBorder = HTLEFT;
+            break;
+        case GLFW_WINDOW_TOP:
+            wBorder = HTTOP;
+            break;
+        case GLFW_WINDOW_RIGHT:
+            wBorder = HTRIGHT;
+            break;
+        case GLFW_WINDOW_BOTTOM:
+            wBorder = HTBOTTOM;
+            break;
+        case GLFW_WINDOW_TOPLEFT:
+            wBorder = HTTOPLEFT;
+            break;
+        case GLFW_WINDOW_TOPRIGHT:
+            wBorder = HTTOPRIGHT;
+            break;
+        case GLFW_WINDOW_BOTTOMLEFT:
+            wBorder = HTBOTTOMLEFT;
+            break;
+        case GLFW_WINDOW_BOTTOMRIGHT:
+            wBorder = HTBOTTOMRIGHT;
+			break;
+		default:
+			assert(GLFW_FALSE);
+    }
+    ReleaseCapture();
+    SendMessage(window->win32.handle, WM_NCLBUTTONDOWN, wBorder, 0);
+}
+
 void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
                                    _GLFWmonitor* monitor,
                                    int xpos, int ypos,
